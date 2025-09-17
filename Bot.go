@@ -75,7 +75,6 @@ func main() {
 				}
 
 			default:
-				// Обработка неизвестных команд
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "❌ Неизвестная команда. Используйте /help для списка команд.")
 				bot.Send(msg)
 			}
@@ -102,11 +101,13 @@ func printMessageToConsole(message *tgbotapi.Message) {
 	fmt.Printf("==========================\n")
 }
 
+// Функция для рандоматизации чисел
 func random() {
 	randomNumber = rand.Intn(100) + 1
 	fmt.Printf("Сгенерировано число: %d\n", randomNumber)
 }
 
+// Функция для создание выводимого текста
 func text() {
 	hello = "Добро пожаловать в тестовую версию бота на языке go\n\n" +
 		"Вот список доступных команд:\n" +
@@ -116,6 +117,7 @@ func text() {
 
 	creator = "Разработчик данного бота:\n" +
 		"Илья Лукьянов из 3ИС3."
+
 	help = "Вот список доступных команд:\n" +
 		"/random - случайное число\n" +
 		"/creator - узнать о разработчике"
