@@ -39,44 +39,69 @@ func main() {
 			printMessageToConsole(update.Message)
 		}
 
-		// Обрабатываем команды
-		if update.Message != nil && update.Message.IsCommand() {
-			switch update.Message.Command() {
-			case "start":
-				msg := tgbotapi.NewMessage(update.Message.Chat.ID, hello)
-				msg.ReplyToMessageID = update.Message.MessageID
-				if _, err := bot.Send(msg); err != nil {
-					log.Println("Ошибка отправки:", err)
-				}
-
-			case "random":
+		if !update.Message.IsCommand() {
+			switch update.Message.Text {
+			case "🎲 Случайное число":
 				random()
 				responseText := fmt.Sprintf("🎲 Ваше случайное число: %d", randomNumber)
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, responseText)
-				msg.ReplyToMessageID = update.Message.MessageID
 				if _, err := bot.Send(msg); err != nil {
 					log.Println("Ошибка отправки:", err)
 				}
 
-			case "creator":
-				responseText := fmt.Sprintf(creator)
-				msg := tgbotapi.NewMessage(update.Message.Chat.ID, responseText)
-				msg.ReplyToMessageID = update.Message.MessageID
+			case "👨‍💻 Создатель":
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, creator)
 				if _, err := bot.Send(msg); err != nil {
 					log.Println("Ошибка отправки:", err)
 				}
 
-			case "help":
-				responseText := fmt.Sprintf(help)
-				msg := tgbotapi.NewMessage(update.Message.Chat.ID, responseText)
-				msg.ReplyToMessageID = update.Message.MessageID
+			case "ℹ️ Помощь":
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, help)
 				if _, err := bot.Send(msg); err != nil {
 					log.Println("Ошибка отправки:", err)
 				}
+			}
 
-			default:
-				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "❌ Неизвестная команда. Используйте /help для списка команд.")
-				bot.Send(msg)
+			// Обрабатываем команды
+			if update.Message != nil && update.Message.IsCommand() {
+				switch update.Message.Command() {
+				case "start":
+					msg := tgbotapi.NewMessage(update.Message.Chat.ID, hello)
+					msg.ReplyMarkup = createMainKeyboard()
+					msg.ReplyToMessageID = update.Message.MessageID
+					if _, err := bot.Send(msg); err != nil {
+						log.Println("Ошибка отправки:", err)
+					}
+
+				case "random":
+					random()
+					responseText := fmt.Sprintf("🎲 Ваше случайное число: %d", randomNumber)
+					msg := tgbotapi.NewMessage(update.Message.Chat.ID, responseText)
+					msg.ReplyToMessageID = update.Message.MessageID
+					if _, err := bot.Send(msg); err != nil {
+						log.Println("Ошибка отправки:", err)
+					}
+
+				case "creator":
+					responseText := fmt.Sprintf(creator)
+					msg := tgbotapi.NewMessage(update.Message.Chat.ID, responseText)
+					msg.ReplyToMessageID = update.Message.MessageID
+					if _, err := bot.Send(msg); err != nil {
+						log.Println("Ошибка отправки:", err)
+					}
+
+				case "help":
+					responseText := fmt.Sprintf(help)
+					msg := tgbotapi.NewMessage(update.Message.Chat.ID, responseText)
+					msg.ReplyToMessageID = update.Message.MessageID
+					if _, err := bot.Send(msg); err != nil {
+						log.Println("Ошибка отправки:", err)
+					}
+
+				default:
+					msg := tgbotapi.NewMessage(update.Message.Chat.ID, "❌ Неизвестная команда. Используйте /help для списка команд.")
+					bot.Send(msg)
+				}
 			}
 		}
 	}
@@ -121,4 +146,16 @@ func text() {
 	help = "Вот список доступных команд:\n" +
 		"/random - случайное число\n" +
 		"/creator - узнать о разработчике"
+}
+
+func createMainKeyboard() tgbotapi.ReplyKeyboardMarkup {
+	return tgbotapi.NewReplyKeyboard(
+		tgbotapi.NewKeyboardButtonRow(
+			tgbotapi.NewKeyboardButton("🎲 Случайное число"),
+			tgbotapi.NewKeyboardButton("👨‍💻 Создатель"),
+		),
+		tgbotapi.NewKeyboardButtonRow(
+			tgbotapi.NewKeyboardButton("ℹ️ Помощь"),
+		),
+	)
 }
