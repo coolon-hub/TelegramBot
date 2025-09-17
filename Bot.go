@@ -19,7 +19,7 @@ var (
 func main() {
 	text()
 
-	bot, err := tgbotapi.NewBotAPI("8237516250:AAHkIyTXTTsktx11sywTgdl13qUXP_g1KhE")
+	bot, err := tgbotapi.NewBotAPI("ВАШ_ТОКЕН")
 	if err != nil {
 		log.Panic(err)
 	}
